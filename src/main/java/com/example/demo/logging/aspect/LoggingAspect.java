@@ -1,6 +1,8 @@
 package com.example.demo.logging.aspect;
 
 import com.example.demo.logging.annotation.LogMethod;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.time.StopWatch;
 import org.aspectj.lang.JoinPoint;
@@ -20,6 +22,8 @@ import java.util.stream.IntStream;
 @Log4j2
 public class LoggingAspect {
 
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
   @Around("@within(logMethod) || @annotation(logMethod)")
   public Object logMethodExecution(ProceedingJoinPoint pjp, LogMethod logMethod) throws Throwable {
     final MethodSignature signature = (MethodSignature) pjp.getSignature();
@@ -28,7 +32,14 @@ public class LoggingAspect {
     try {
       final String arguments = IntStream.iterate(0, i -> i + 1)
           .limit(Math.min(signature.getParameterNames().length, pjp.getArgs().length))
-          .mapToObj(i -> signature.getParameterNames()[i] + "=" + pjp.getArgs()[i])
+          .mapToObj(i -> {
+            try {
+              return signature.getParameterNames()[i] + "=" + objectMapper.writeValueAsString(pjp.getArgs()[i]);
+            } catch (JsonProcessingException e) {
+              log.error("cannot parse as JSON value = {}", pjp.getArgs()[i], e);
+              throw new RuntimeException(e);
+            }
+          })
           .collect(Collectors.joining(","));
       log.info("Start execution of {} with arguments: {}", method, arguments);
       stopWatch.start();

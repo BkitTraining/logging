@@ -1,0 +1,30 @@
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.example.demo.logging.logging.MaskingPatternLayout">
+                <maskPattern>\"email\"\s*:\s*\"(.*?)\"</maskPattern>
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <!--    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+    <!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder">-->
+    <!--            <jsonGeneratorDecorator class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">-->
+    <!--                <valueMasker class="com.example.demo.logging.logging.SensitiveValueMasker">-->
+    <!--                    <maskPattern>\"email\"\s*:\s*\"(.*?)\"</maskPattern>-->
+    <!--                    <maskPattern>email\s*=\s*(.*?)</maskPattern>-->
+    <!--                </valueMasker>-->
+    <!--            </jsonGeneratorDecorator>-->
+    <!--        </encoder>-->
+    <!--    </appender>-->
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

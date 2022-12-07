@@ -4,7 +4,10 @@ import com.example.demo.logging.annotation.LogMethod;
 import com.example.demo.logging.exception.ResourceNotFoundException;
 import com.example.demo.logging.model.EmployeeEntity;
 import com.example.demo.logging.service.EmployeeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +25,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 @AllArgsConstructor
 @LogMethod
+@Log4j2
 public class EmployeeController {
 
   private final EmployeeService employeeService;
