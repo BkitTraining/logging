@@ -14,7 +14,7 @@ public class SensitiveValueMasker implements ValueMasker {
   private String mask = "*****";
   private Pattern pattern;
 
-  private List<String> maskPatterns = new ArrayList<>();
+  private final List<String> maskPatterns = new ArrayList<>();
 
   public void addMaskPattern(String maskPattern) {
     maskPatterns.add(maskPattern);

@@ -11,9 +11,11 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -28,6 +30,7 @@ public class LoggingAspect {
   public Object logMethodExecution(ProceedingJoinPoint pjp, LogMethod logMethod) throws Throwable {
     final MethodSignature signature = (MethodSignature) pjp.getSignature();
     final Method method = signature.getMethod();
+    String shortMethod = method.getDeclaringClass().getSimpleName() + "." + method.getName() + "()";
     final StopWatch stopWatch = new StopWatch();
     try {
       final String arguments = IntStream.iterate(0, i -> i + 1)
@@ -41,15 +44,15 @@ public class LoggingAspect {
             }
           })
           .collect(Collectors.joining(","));
-      log.info("Start execution of {} with arguments: {}", method, arguments);
+      log.info("Start execution of {} with arguments: {}", shortMethod, arguments);
       stopWatch.start();
       final Object result = pjp.proceed();
       stopWatch.stop();
-      log.info("Finish execution of {} (running {} ms)", method, stopWatch.getTime());
+      log.info("End execution of {} (running {} ms)", shortMethod, stopWatch.getTime());
       return result;
     } catch (Exception ex) {
       stopWatch.stop();
-      log.error("Fail execution of {} (running {} ms)", method, stopWatch.getTime(), ex);
+      log.error("Fail execution of {} (running {} ms)", shortMethod, stopWatch.getTime(), ex);
       throw ex;
     }
   }

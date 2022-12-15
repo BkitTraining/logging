@@ -2,6 +2,7 @@ package com.example.demo.logging.service;
 
 import com.example.demo.logging.exception.ResourceNotFoundException;
 import com.example.demo.logging.model.EmployeeEntity;
+import com.example.demo.logging.model.dto.BankInfo;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface EmployeeService {
   EmployeeEntity updateEmployee(Long employeeId, EmployeeEntity employeeEntityDetails) throws ResourceNotFoundException;
 
   void deleteEmployee(Long employeeId) throws ResourceNotFoundException;
+
+  BankInfo getBankInfo(Long employeeId) throws ResourceNotFoundException;
 }

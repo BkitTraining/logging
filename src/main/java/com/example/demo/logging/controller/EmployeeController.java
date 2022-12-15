@@ -3,9 +3,8 @@ package com.example.demo.logging.controller;
 import com.example.demo.logging.annotation.LogMethod;
 import com.example.demo.logging.exception.ResourceNotFoundException;
 import com.example.demo.logging.model.EmployeeEntity;
+import com.example.demo.logging.model.dto.BankInfo;
 import com.example.demo.logging.service.EmployeeService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +37,8 @@ public class EmployeeController {
   @GetMapping("/employees/{id}")
   public ResponseEntity<EmployeeEntity> getEmployeeById(@PathVariable(value = "id") Long employeeId)
       throws ResourceNotFoundException {
+    log.info("find User");
+    log.info("find User {}", employeeId);
     EmployeeEntity employeeEntity = employeeService.getEmployeeById(employeeId);
     return ResponseEntity.ok().body(employeeEntity);
   }
@@ -58,4 +59,10 @@ public class EmployeeController {
   public void deleteEmployee(@PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException {
     employeeService.deleteEmployee(employeeId);
   }
+
+  @GetMapping("/employees/{id}/bankInfo")
+  public ResponseEntity<BankInfo> getBankInfo(@PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException {
+    return ResponseEntity.ok(employeeService.getBankInfo(employeeId));
+  }
+
 }
